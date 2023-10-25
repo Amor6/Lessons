@@ -10,14 +10,16 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+from dotenv import load_dotenv
 from pathlib import Path
 import os
+
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
+load_dotenv(BASE_DIR / '.env')
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -89,11 +91,11 @@ AUTH_USER_MODEL = "user.User"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'less',
-        'USER': 'postgres',
+        'NAME': os.getenv('DATABASES_DEFAULT_NAME'),
+        'USER': os.getenv('DATABASES_DEFAULT_USER'),
         'HOST': 'localhost',
         'PORT': 5432,
-        'PASSWORD': 'Z5pfdnhf9!,hjie89',
+        'PASSWORD': os.getenv('DATABASES_DEFAULT_PASSWORD'),
 
     }
 }

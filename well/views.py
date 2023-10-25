@@ -17,13 +17,13 @@ class CourseViewSet(viewsets.ModelViewSet):
 
 
 
-class CourseListCreateView(generics.ListCreateAPIView):
+class CourseListCreateView(viewsets.ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
 
 
 
-class CourseRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+class CourseRetrieveUpdateDestroyView(viewsets.ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
 
