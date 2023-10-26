@@ -17,18 +17,6 @@ class CourseViewSet(viewsets.ModelViewSet):
 
 
 
-class CourseListCreateView(viewsets.ModelViewSet):
-    queryset = Course.objects.all()
-    serializer_class = CourseSerializer
-
-
-
-class CourseRetrieveUpdateDestroyView(viewsets.ModelViewSet):
-    queryset = Course.objects.all()
-    serializer_class = CourseSerializer
-
-
-
 class LessonListCreateView(generics.ListCreateAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
