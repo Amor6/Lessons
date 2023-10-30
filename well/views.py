@@ -1,8 +1,8 @@
-from rest_framework import viewsets, generics
+from rest_framework import viewsets, generics, filters
 from rest_framework.pagination import PageNumberPagination
 
-from .models import Course, Lesson
-from .serializers import CourseSerializer, LessonSerializer
+from .models import Course, Lesson, Payment
+from .serializers import CourseSerializer, LessonSerializer, PaymentSerializer
 
 
 class CustomPagination(PageNumberPagination):
@@ -25,5 +25,12 @@ class LessonListCreateView(generics.ListCreateAPIView):
 class LessonRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
+
+class PaymentListView(generics.ListAPIView):
+    queryset = Payment.objects.all()
+    serializer_class = PaymentSerializer
+    filter_backends = [filters.OrderingFilter, filters.SearchFilter]
+    ordering_fields = ['payment_date']
+    pagination_class = CustomPagination
 
 
