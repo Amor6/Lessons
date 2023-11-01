@@ -8,6 +8,8 @@ class Course(models.Model):
     title = models.CharField(max_length=200)
     preview = models.ImageField(upload_to='previews/')
     description = models.TextField(verbose_name='Описание')
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, **NULLABLE,
+                              verbose_name='Создатель')
 
     def __str__(self):
         return self.title
@@ -18,6 +20,8 @@ class Lesson(models.Model):
     description = models.TextField()
     preview = models.ImageField(upload_to='previews/')
     video_link = models.URLField(verbose_name='Описание')
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, **NULLABLE,
+                              verbose_name='Создатель')
 
     def __str__(self):
         return self.title
