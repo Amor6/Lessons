@@ -2,9 +2,10 @@ from rest_framework import viewsets, generics, filters
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny, IsAuthenticatedOrReadOnly
 from well.permissions import IsOwnerOrStaff, IsModerator, IsOwner
+from user.models import User, Subscription
 
 from .models import Course, Lesson, Payment
-from .serializers import CourseSerializer, LessonSerializer, PaymentSerializer
+from .serializers import CourseSerializer, LessonSerializer, PaymentSerializer, SubscriptionSerializer
 
 
 class CustomPagination(PageNumberPagination):
@@ -42,5 +43,14 @@ class PaymentListView(generics.ListAPIView):
     filter_backends = [filters.OrderingFilter, filters.SearchFilter]
     ordering_fields = ['payment_date']
     pagination_class = CustomPagination
+
+class SubscriptionCreateAPIView(generics.CreateAPIView):
+    """Создание подписки"""
+    serializer_class = SubscriptionSerializer
+
+class SubscriptionDestroyAPIView(generics.DestroyAPIView):
+    """Удаление подписки"""
+    queryset = Subscription.objects.all()
+
 
 
