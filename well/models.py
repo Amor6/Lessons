@@ -43,3 +43,30 @@ class Payment(models.Model):
     amount = models.IntegerField(verbose_name='сумма оплаты')
     method = models.CharField(max_length=4, choices=PAYMENT_METHOD_CHOICES, **NULLABLE, verbose_name='способ оплаты')
     date = models.DateField(auto_now_add=True, verbose_name='Дата оплаты')
+
+class Subscription(models.Model):
+    class Meta:
+        verbose_name = 'Подписка на курс'
+        verbose_name_plural = 'Подписки на курс'
+
+    course_name = models.CharField(
+        max_length=300, verbose_name='название подписки', **NULLABLE,
+    )
+    course = models.ForeignKey(
+        'course.Course', verbose_name='курс для подписки', on_delete=models.CASCADE,
+        related_name='subscriptions',
+    )
+    user = models.ForeignKey(
+        'users.User', verbose_name='пользователь', on_delete=models.CASCADE,
+        related_name='subscriptions',
+    )
+
+    is_subscribed = models.BooleanField(default=False, verbose_name='Подписка оформлена')
+
+    def __str__(self):
+        return f'{self.course} {self.user}'
+
+    def save(self, *args, **kwargs):
+        self.course_name = self.course.title
+
+        return super(Subscription, self).save(*args, **kwargs)

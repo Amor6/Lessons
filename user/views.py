@@ -1,8 +1,8 @@
 from rest_framework import generics, viewsets
 from .models import User
-from .serializers import UserSerializer, SubscriptionSerializer
+from .serializers import UserSerializer
 
-from user.models import Subscription
+
 
 
 
@@ -36,11 +36,4 @@ class UserDestroyAPIView(generics.DestroyAPIView):
     queryset = User.objects.all()
 
 
-class SubscriptionCreateAPIView(generics.CreateAPIView):
-    """Создание подписки"""
-    serializer_class = SubscriptionSerializer
 
-
-class SubscriptionDestroyAPIView(generics.DestroyAPIView):
-    """Удаление подписки"""
-    queryset = Subscription.objects.all()

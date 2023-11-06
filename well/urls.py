@@ -2,7 +2,7 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from well.views import CourseViewSet, LessonListCreateView, LessonRetrieveUpdateDestroyView, PaymentListView
 
-from user.views import  SubscriptionCreateAPIView, SubscriptionDestroyAPIView
+from .views import  SubscriptionCreateAPIView, SubscriptionDestroyAPIView
 
 router = DefaultRouter()
 router.register(r'well', CourseViewSet)

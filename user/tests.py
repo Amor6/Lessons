@@ -2,8 +2,8 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 from well.models import Course, Lesson
-from user.models import Subscription, User
-
+from user.models import User
+from well.models import Subscription
 
 class SubscriptionPositiveTestCase(APITestCase):
 
@@ -98,13 +98,32 @@ class SubscriptionNegativeTestCase(APITestCase):
         }
 
         response = self.client.post(
-            path='/users/subscription/create/', data=data,
+            reverse('users:subscription_create'),
+            data=data,
         )
+
+        # print(response.json())
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.json().get('course'), self.course.pk)
+        self.assertEqual(response.json().get('user'), self.user.pk)
+        self.assertEqual(response.json().get('course_name'), self.course.title)
 
-        response = self.client.post(
-            path='/users/subscription/create/', data=data,
+    def test_subscription_delete(self):
+        self.client.force_authenticate(user=self.user)
+
+        subscription = Subscription.objects.create(
+            course=self.course,
+            user=self.user,
         )
 
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        response = self.client.delete(
+            f'/users/subscription/delete/{subscription.pk}/',
+        )
+
+        self.assertEqual(
+            response.status_code, status.HTTP_204_NO_CONTENT,
+        )
+        self.assertFalse(
+            Subscription.objects.all().exists(),
+        )

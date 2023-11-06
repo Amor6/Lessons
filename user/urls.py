@@ -2,8 +2,8 @@ from django.urls import path
 
 from .apps import UserConfig
 # from .views import UserListCreateView, UserRetrieveUpdateDestroyView
-from user.views import  UserCreateAPIView, UserListAPIView, UserUpdateAPIView, UserDestroyAPIView, \
-    SubscriptionCreateAPIView, SubscriptionDestroyAPIView
+from user.views import UserCreateAPIView, UserListAPIView, UserUpdateAPIView, UserDestroyAPIView
+from well.views import SubscriptionCreateAPIView, SubscriptionDestroyAPIView
 
 
 app_name = UserConfig.name
