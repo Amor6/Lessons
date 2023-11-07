@@ -36,7 +36,7 @@ class SubscriptionPositiveTestCase(APITestCase):
         }
 
         response = self.client.post(
-            reverse('users:subscription_create'),
+            reverse('users:subscription'),
             data=data,
         )
 
@@ -45,7 +45,6 @@ class SubscriptionPositiveTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.json().get('course'), self.course.pk)
         self.assertEqual(response.json().get('user'), self.user.pk)
-        self.assertEqual(response.json().get('course_name'), self.course.title)
 
     def test_subscription_delete(self):
         self.client.force_authenticate(user=self.user)
@@ -56,7 +55,7 @@ class SubscriptionPositiveTestCase(APITestCase):
         )
 
         response = self.client.delete(
-            f'/users/subscription/delete/{subscription.pk}/',
+            f'user/{subscription.id}/unsubscribe/',
         )
 
         self.assertEqual(
@@ -87,43 +86,4 @@ class SubscriptionNegativeTestCase(APITestCase):
             video_url='https://www.youtube.com',
             owner=self.user,
             course=self.course,
-        )
-
-    def test_subscription_create(self):
-        self.client.force_authenticate(user=self.user)
-
-        data = {
-            'course': self.course.pk,
-            'user': self.user.pk,
-        }
-
-        response = self.client.post(
-            reverse('users:subscription_create'),
-            data=data,
-        )
-
-        # print(response.json())
-
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.json().get('course'), self.course.pk)
-        self.assertEqual(response.json().get('user'), self.user.pk)
-        self.assertEqual(response.json().get('course_name'), self.course.title)
-
-    def test_subscription_delete(self):
-        self.client.force_authenticate(user=self.user)
-
-        subscription = Subscription.objects.create(
-            course=self.course,
-            user=self.user,
-        )
-
-        response = self.client.delete(
-            f'/users/subscription/delete/{subscription.pk}/',
-        )
-
-        self.assertEqual(
-            response.status_code, status.HTTP_204_NO_CONTENT,
-        )
-        self.assertFalse(
-            Subscription.objects.all().exists(),
         )

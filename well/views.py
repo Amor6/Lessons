@@ -56,7 +56,6 @@ class SubscriptionDestroyAPIView(generics.DestroyAPIView):
     queryset = Subscription.objects.all()
 
 
-class SubscriptionCreateAPIView(generics.CreateAPIView):
     """Создание подписки"""
     serializer_class = SubscriptionSerializer
 

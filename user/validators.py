@@ -3,20 +3,17 @@ from rest_framework import serializers
 
 
 class AlreadySubscribedCheck:
+    from django.template.defaulttags import url
 
-    def __call__(self, fields: OrderedDict) -> None:
-        """Проверка при создании подписки на уже существующую подписку.
-        Args:
-            fields (OrderedDict): Поля сериализатора.
+    from config import settings
+    from user import serializers
 
-        Raises:
-            serializers.ValidationError: Если пользователь уже подписан.
-        """
-        course, user = fields.items()
-        course = course[1]
-        user = user[1]
+    is_valid = False
+    for allowed_url in settings.ALLOWED_URLS:
+        if allowed_url in url:
+            is_valid = True
 
-        subs = user.subscriptions.all()
-
-        if subs.filter(course=course).exists():
-            raise serializers.ValidationError(f'Пользователь уже подписан на этот курс.')
+    if not is_valid:
+        raise serializers.ValidationError(
+            'Использование стороннего ресурса недопустимо!'
+        )
