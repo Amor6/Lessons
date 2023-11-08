@@ -61,14 +61,5 @@ class Subscription(models.Model):
     user = models.ForeignKey('users.User', verbose_name='пользователь', on_delete=models.CASCADE,
         related_name='subscriptions',)
 
-    def post(request, course_id: int, *args, **kwargs):
-        course = get_object_or_404(Course, pk=course_id)
 
-        subscription, created = Subscription.objects.get_or_create(
-            course=course,
-            user=request.user
-        )
-
-        serializer = SubscriptionSerializer(subscription)
-        return Response(serializer.data, status=201 if created else 208)
 

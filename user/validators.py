@@ -1,19 +1,18 @@
 from collections import OrderedDict
 from rest_framework import serializers
+from rest_framework.serializers import ValidationError
+
+PROPER_DOMAINS = ['youtube.com', ]
 
 
-class AlreadySubscribedCheck:
-    from django.template.defaulttags import url
+class VideoURLValidator:
 
-    from config import settings
-    from user import serializers
+    def __init__(self, field_name: str):
+        self.field_name = field_name
 
-    is_valid = False
-    for allowed_url in settings.ALLOWED_URLS:
-        if allowed_url in url:
-            is_valid = True
+    def __call__(self, fields: OrderedDict) -> None:
 
-    if not is_valid:
-        raise serializers.ValidationError(
-            'Использование стороннего ресурса недопустимо!'
-        )
+        url = dict(fields).get(self.field_name)
+
+        if url is not None and 'youtube.com' not in url:
+            raise ValidationError('Не правильный url')
