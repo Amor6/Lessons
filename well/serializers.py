@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import Course, Lesson, Payment
 
 from models import Subscription
-from user.validators import AlreadySubscribedCheck
+from well.validators import VideoURLValidator
 
 class CourseSerializer(serializers.ModelSerializer):
     num_lessons = serializers.SerializerMethodField()
@@ -31,4 +31,6 @@ class SubscriptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subscription
         fields = '__all__'
-        validators = [AlreadySubscribedCheck()]
+        validators = [VideoURLValidator()]
+
+

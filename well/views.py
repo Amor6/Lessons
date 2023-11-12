@@ -1,9 +1,14 @@
+import requests
+import stripe
 from django.shortcuts import get_object_or_404
+from requests import RequestException
 from rest_framework import viewsets, generics, filters, status
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
+from config import settings
 from well.permissions import IsOwnerOrStaff, IsModerator, IsOwner
 from user.models import User
 
@@ -12,6 +17,7 @@ from models import Subscription
 
 from .models import Course, Lesson, Payment
 from .serializers import CourseSerializer, LessonSerializer, PaymentSerializer, SubscriptionSerializer
+from .services import get_session_of_payment
 
 
 class CustomPagination(PageNumberPagination):
@@ -25,8 +31,28 @@ class CourseViewSet(viewsets.ModelViewSet):
     serializer_class = CourseSerializer
     permission_classes = [AllowAny]
 
+class PaymentCreateAPIView(generics.CreateAPIView):
+    """Создание платежа"""
+    serializer_class = PaymentSerializer
 
 
+    def perform_create(self, serializer):
+        session = get_session_of_payment(self)
+
+
+class PaymentRetrieveAPIView(generics.RetrieveAPIView):
+    serializer_class = PaymentSerializer
+    queryset = Payment.objects.all()
+
+    def get_object(self):
+        payment = super().get_object()
+
+        if payment.status != 'complete':
+            stripe_data = get_payment_info(payment.stripe_payment_id)
+            payment.status = stripe_data.get('status')
+            payment.save()
+
+        return payment
 class LessonListCreateView(generics.ListCreateAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
@@ -87,6 +113,17 @@ class SubscriptionDestroyAPIView(generics.DestroyAPIView):
         return Response({'detail': 'Вы успешно отписались от курса.'}, status=status.HTTP_200_OK)
 
 
-
+# class SomeAPIView(APIView):
+#
+#     def get(self, *args, **kwargs):
+#         try:
+#             response = requests.get('https://stripe.com/docs/api/payment_intents/create ')
+#             response.raise_for_status()  # Проверка на ошибки HTTP
+#             data = response.json()
+#             # Обработка полученных данных
+#             return Response(data)
+#         except RequestException as e:
+#             # Обработка исключения
+#             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 

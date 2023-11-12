@@ -253,3 +253,17 @@ class CourseTestCase(APITestCase):
         self.assertTrue(
             Course.objects.all().exists()
         )
+
+    @property
+    def display_price(self) -> str:
+        return '${0:.2f}'.format(self.price / 100)
+
+    @property
+    def stripe_price_data(self) -> dict:
+        return {
+            'currency': 'usd',
+            'unit_amount': self.price,
+            'product_data': {
+                'name': self.name,
+            },
+        }
