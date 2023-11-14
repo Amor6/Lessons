@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'well',
     'drf_yasg',
     'rest_framework',
+    'django_celery_beat',
     'rest_framework_simplejwt',
     'corsheaders',
 ]
@@ -177,3 +178,7 @@ CSRF_TRUSTED_ORIGINS = [
 CORS_ALLOW_ALL_ORIGINS = False
 
 STRIPE_TOKEN = os.getenv('STRIPE_TOKEN')
+
+
+CELERY_BROKER_URL = "redis://redis:6379"
+CELERY_RESULT_BACKEND = "redis://redis:6379"

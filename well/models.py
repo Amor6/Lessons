@@ -48,6 +48,8 @@ class Payment(models.Model):
     method = models.CharField(max_length=4, choices=PAYMENT_METHOD_CHOICES, **NULLABLE, verbose_name='способ оплаты')
     date = models.DateField(auto_now_add=True, verbose_name='Дата оплаты')
 
+    def __str__(self):
+        return f'{self.amount}({self.method}) - {self.date}'
 
 
 class Subscription(models.Model):
